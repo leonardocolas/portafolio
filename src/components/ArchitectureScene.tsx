@@ -4,7 +4,6 @@ import * as THREE from 'three';
 type LayerKey = 'frontend' | 'backend' | 'database';
 type Props = {
   labels: Record<LayerKey, string>;
-  hint: string;
   language: 'es' | 'en';
 };
 
@@ -14,7 +13,7 @@ const layerPositions: Record<LayerKey, THREE.Vector3> = {
   database: new THREE.Vector3(1.02, -0.47, -0.04),
 };
 
-export default function ArchitectureScene({ labels, hint, language }: Props) {
+export default function ArchitectureScene({ labels, language }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const renderOnceRef = useRef<(() => void) | null>(null);
   const selectionRef = useRef<LayerKey>('frontend');
@@ -210,7 +209,6 @@ export default function ArchitectureScene({ labels, hint, language }: Props) {
       <div className="architecture-labels">
         {layerOptions.map((key) => <button className={`architecture-node-label node-${key} ${activeLayer === key ? 'active' : ''}`} type="button" key={key} aria-pressed={activeLayer === key} onClick={() => setActiveLayer(key)}><span className="node-label-dot" />{labels[key]}</button>)}
       </div>
-      <p className="architecture-hint"><span className="drag-symbol" aria-hidden="true">↗</span>{hint}</p>
     </div>
   );
 }

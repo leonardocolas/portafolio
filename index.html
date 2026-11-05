@@ -3,15 +3,35 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="theme-color" content="#f5f4ef" />
+    <meta name="format-detection" content="email=no" />
+    <meta name="theme-color" content="#f5f5ef" />
     <meta name="description" content="Portafolio profesional de Leonardo Colás Leyva, Ingeniero en Ciencias Informáticas y Desarrollador Full Stack en La Habana, Cuba." />
     <meta property="og:title" content="Leonardo Colás Leyva — Full Stack Developer" />
     <meta property="og:description" content="Ingeniería de software para productos con propósito." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Leonardo Colás Leyva — Full Stack Developer</title>
+    <style>
+      html { color-scheme: light; }
+      html[data-theme="dark"] { color-scheme: dark; --loader-background: #111a16; --loader-foreground: #e5ede8; --loader-track: #38473f; --loader-accent: #9bd9bb; }
+      * { box-sizing: border-box; }
+      body { margin: 0; }
+      #root { min-height: 100vh; }
+      .portfolio-loader { position: fixed; z-index: 1000; inset: 0; display: grid; align-content: center; justify-items: center; gap: 15px; min-height: 100vh; min-height: 100svh; color: var(--loader-foreground, #203633); background: var(--loader-background, #f5f5ef); font: 500 13px/1.5 'Segoe UI', sans-serif; }
+      .loading-ring { width: 40px; height: 40px; border: 3px solid var(--loader-track, #d9e2dc); border-top-color: var(--loader-accent, #237764); border-radius: 50%; animation: portfolio-spin .78s linear infinite; }
+      @keyframes portfolio-spin { to { transform: rotate(360deg); } }
+      @media (prefers-reduced-motion: reduce) { .loading-ring { animation: none; border-top-color: var(--loader-accent, #237764); } }
+    </style>
+    <script>
+      try { if (localStorage.getItem('portfolio-theme') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch (_) {}
+    </script>
   </head>
   <body>
-    <div id="root"></div>
+    <div id="root">
+      <div class="portfolio-loader" role="status" aria-live="polite">
+        <span class="loading-ring" aria-hidden="true"></span>
+        <span>Cargando el portafolio…</span>
+      </div>
+    </div>
     <script type="module" src="/src/main.tsx"></script>
   </body>
 </html>

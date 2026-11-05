@@ -1,9 +1,10 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { ArrowDownRight, ArrowRight, ArrowUpRight, Download, Github, Globe2, Mail, MapPin, Menu, Phone, X } from 'lucide-react';
+import { Download, Github, Globe2, MapPin, Menu, Moon, Phone, Sun, X } from 'lucide-react';
 import cv from './data/cv.json';
 const ArchitectureScene = lazy(() => import('./components/ArchitectureScene'));
 
 type Language = 'es' | 'en';
+type Theme = 'light' | 'dark';
 
 // The final URLs point to the durable portfolio-file storage addresses.
 const pdfUrls = {
@@ -20,6 +21,13 @@ function App() {
       return 'es';
     }
   });
+  const [theme, setTheme] = useState<Theme>(() => {
+    try {
+      return localStorage.getItem('portfolio-theme') === 'dark' ? 'dark' : 'light';
+    } catch {
+      return 'light';
+    }
+  });
   const [menuOpen, setMenuOpen] = useState(false);
   const content = cv[language];
 
@@ -29,8 +37,18 @@ function App() {
     try { localStorage.setItem('portfolio-language', language); } catch { /* storage can be unavailable */ }
   }, [language, content.name, content.title]);
 
+  useEffect(() => {
+    const root = document.documentElement;
+    root.dataset.theme = theme;
+    root.style.colorScheme = theme;
+    document.querySelector('meta[name="theme-color"]')?.setAttribute('content', theme === 'dark' ? '#111a16' : '#f5f5ef');
+    try { localStorage.setItem('portfolio-theme', theme); } catch { /* storage can be unavailable */ }
+  }, [theme]);
+
   const switchLanguage = () => setLanguage((current) => current === 'es' ? 'en' : 'es');
+  const switchTheme = () => setTheme((current) => current === 'light' ? 'dark' : 'light');
   const closeMenu = () => setMenuOpen(false);
+  const themeLabel = theme === 'dark' ? content.enableLightMode : content.enableDarkMode;
 
   return (
     <>
@@ -49,9 +67,14 @@ function App() {
           <a href="#proyectos" onClick={closeMenu}>{content.nav.projects}</a>
           <a href="#competencias" onClick={closeMenu}>{content.nav.skills}</a>
           <a href="#formacion" onClick={closeMenu}>{content.nav.education}</a>
-          <button className="language-toggle" type="button" onClick={switchLanguage} aria-label={content.languageSwitch}>
-            <Globe2 size={15} strokeWidth={1.8} /><span>{language === 'es' ? 'EN' : 'ES'}</span>
-          </button>
+          <div className="nav-controls">
+            <button className="language-toggle" type="button" onClick={switchLanguage} aria-label={content.languageSwitch}>
+              <Globe2 size={15} strokeWidth={1.8} /><span>{language === 'es' ? 'EN' : 'ES'}</span>
+            </button>
+            <button className="theme-toggle" type="button" onClick={switchTheme} aria-label={themeLabel} title={themeLabel} aria-pressed={theme === 'dark'}>
+              {theme === 'dark' ? <Sun size={16} strokeWidth={1.8} /> : <Moon size={16} strokeWidth={1.8} />}
+            </button>
+          </div>
         </nav>
       </header>
 
@@ -63,13 +86,13 @@ function App() {
             <p className="hero-role">{content.title}</p>
             <p className="hero-tagline">{content.tagline}</p>
             <div className="hero-actions">
-              <a className="button button-primary" href="#contacto">{content.ctaContact}<ArrowUpRight size={16} /></a>
+              <a className="button button-primary" href="#contacto">{content.ctaContact}</a>
               <a className="button button-text" href={pdfUrls[language]} download>
-                <Download size={16} />{content.ctaDownload}<ArrowDownRight size={15} />
+                <Download size={16} />{content.ctaDownload}
               </a>
             </div>
             <div className="hero-quick-contact">
-              <a href="mailto:leonardocolasleyva@gmail.com"><Mail size={14} />leonardocolasleyva@gmail.com</a>
+              <span className="email-plain">leonardocolasleyva@gmail.com</span>
               <span className="quick-separator" aria-hidden="true" />
               <a href="tel:+5356083226"><Phone size={14} />+53 5 6083226</a>
             </div>
@@ -77,9 +100,8 @@ function App() {
           <div className="hero-visual">
             <div className="hero-visual-caption"><span>FIG. 01</span><span>{content.availability}</span></div>
             <Suspense fallback={<div className="architecture-stage architecture-pending" aria-hidden="true"><span /></div>}>
-              <ArchitectureScene labels={content.architectureLabels} hint={content.architectureHint} language={language} />
+              <ArchitectureScene labels={content.architectureLabels} language={language} />
             </Suspense>
-            <div className="hero-visual-foot"><span>DESIGNING THE INVISIBLE</span><span>01 / 05</span></div>
           </div>
           <a className="hero-scroll" href="#sobre-mi"><span className="scroll-line" />{content.scrollCue}</a>
         </section>
@@ -123,7 +145,6 @@ function App() {
                   <p>{project.description}</p>
                   <div className="tag-row">{project.stack.map((tech) => <span key={tech}>{tech}</span>)}</div>
                 </div>
-                <ArrowUpRight className="project-arrow" size={19} aria-hidden="true" />
               </article>
             ))}
           </div>
@@ -175,9 +196,9 @@ function App() {
         </section>
 
         <section className="contact-section" id="contacto">
-          <div className="contact-copy"><span className="eyebrow"><span className="eyebrow-dot" />{content.nav.about} / {language === 'es' ? 'CONTACTO' : 'CONTACT'}</span><h2>{content.contactTitle}</h2><p>{content.contactIntro}</p><a href="mailto:leonardocolasleyva@gmail.com" className="contact-cta">leonardocolasleyva@gmail.com<ArrowUpRight size={18} /></a></div>
+          <div className="contact-copy"><span className="eyebrow"><span className="eyebrow-dot" />{content.nav.about} / {language === 'es' ? 'CONTACTO' : 'CONTACT'}</span><h2>{content.contactTitle}</h2><p>{content.contactIntro}</p><p className="contact-email">leonardocolasleyva@gmail.com</p></div>
           <div className="contact-details">
-            <ContactDetail icon={<Mail size={18} />} label={content.emailLabel} value="leonardocolasleyva@gmail.com" href="mailto:leonardocolasleyva@gmail.com" />
+            <ContactDetail label={content.emailLabel} value="leonardocolasleyva@gmail.com" />
             <ContactDetail icon={<Phone size={18} />} label={content.phoneLabel} value="+53 5 6083226" href="tel:+5356083226" />
             <ContactDetail icon={<Github size={18} />} label={content.githubLabel} value="github.com/leonardocolas" href="https://github.com/leonardocolas" external />
             <ContactDetail icon={<MapPin size={18} />} label={content.locationLabel} value={content.location} />
@@ -185,7 +206,7 @@ function App() {
         </section>
       </main>
 
-      <footer className="site-footer"><a href="#inicio" className="footer-wordmark">LC<span>.</span></a><span>© {new Date().getFullYear()} Leonardo Colás Leyva</span><span>{content.footerNote}</span><a href="#inicio" className="back-top" aria-label={language === 'es' ? 'Volver arriba' : 'Back to top'}><ArrowRight size={16} /></a></footer>
+      <footer className="site-footer"><a href="#inicio" className="footer-wordmark">LC<span>.</span></a><span>© {new Date().getFullYear()} Leonardo Colás Leyva</span><span>{content.footerNote}</span><a href="#inicio" className="back-top" aria-label={content.backToTop}>{content.backToTop}</a></footer>
     </>
   );
 }
@@ -198,8 +219,8 @@ function SkillGroup({ group }: { group: { title: string; items: string[] } }) {
   return <article className="skill-group"><h4>{group.title}</h4><div className="tag-row">{group.items.map((item) => <span key={item}>{item}</span>)}</div></article>;
 }
 
-function ContactDetail({ icon, label, value, href, external }: { icon: React.ReactNode; label: string; value: string; href?: string; external?: boolean }) {
-  return <div className="contact-detail"><span className="contact-icon">{icon}</span><span className="contact-detail-text"><small>{label}</small>{href ? <a href={href} {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}>{value}{external && <ArrowUpRight size={13} />}</a> : <span>{value}</span>}</span></div>;
+function ContactDetail({ icon, label, value, href, external }: { icon?: React.ReactNode; label: string; value: string; href?: string; external?: boolean }) {
+  return <div className="contact-detail">{icon && <span className="contact-icon">{icon}</span>}<span className="contact-detail-text"><small>{label}</small>{href ? <a href={href} {...(external ? { target: '_blank', rel: 'noreferrer' } : {})}>{value}</a> : <span>{value}</span>}</span></div>;
 }
 
 export default App;
