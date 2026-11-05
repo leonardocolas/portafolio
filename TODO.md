@@ -1,0 +1,10 @@
+# TODO — Portafolio de Leonardo Colás Leyva
+
+- [x] **Portada, navegación y detalle 3D:** crear una portada profesional con nombre, título «Ingeniero en Ciencias Informáticas | Desarrollador Full Stack», resumen del perfil y llamadas a contacto y descarga; navegación clara y adaptable a móvil/escritorio; incorporar un detalle 3D discreto e interactivo, de buen rendimiento, coherente con el sitio, con alternativa estática o animación desactivada cuando se prefiera movimiento reducido.
+- [x] **Experiencia profesional bilingüe:** incluir la trayectoria completa en CIGE y CITMATEL, cargos, períodos, ubicaciones, responsabilidades, sistemas desarrollados y tecnologías; permitir verla en español e inglés con traducción fiel, sin inventar datos.
+- [x] **Proyectos:** presentar JobsRadar, KŌYŌ, La Estancia Global Homes, E-commerce Platform y diagnóstico de enfermedades en hojas de frijol, limitándose a la información suministrada; no inventar métricas, demos, URLs ni imágenes.
+- [x] **Competencias:** diferenciar competencias técnicas profesionales, experiencia práctica adicional y competencias de ingeniería de software, conservando las tecnologías y áreas indicadas en el CV.
+- [x] **Formación, reconocimientos e idiomas:** incluir Ingeniería en Ciencias Informáticas en UCI (La Habana), Título de Oro, Alumno Integral, Mérito Científico, Extensión Universitaria, Alumno Ayudante Destacado, Copa UCI de Bases de Datos, puestos 8.º y 3.º en concursos Pascal, y español nativo, inglés B1 intermedio y francés básico.
+- [x] **PDFs completos en ambos idiomas:** proporcionar dos descargas independientes del CV completo: PDF en español y PDF en inglés; ambos deben incluir toda la información del documento traducida fielmente, sin inventar datos.
+- [x] **Contacto:** hacer funcional el correo mailto a leonardocolasleyva@gmail.com, el teléfono +5356083226, el perfil github.com/leonardocolas y la ubicación La Habana, Cuba.
+- [x] **Accesibilidad e idioma:** ofrecer un selector accesible español/inglés y controles accesibles para idioma, enlaces y descargas; asegurar navegación responsive y movimiento reducido para la pieza 3D.
