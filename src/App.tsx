@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { Download, Github, Globe2, MapPin, Menu, Moon, Sun, X } from 'lucide-react';
+import { Download, Github, Globe2, MapPin, Menu, Moon, Phone, Sun, X } from 'lucide-react';
 import cv from './data/cv.json';
 const ArchitectureScene = lazy(() => import('./components/ArchitectureScene'));
 
@@ -84,7 +84,6 @@ function App() {
             <div className="eyebrow"><span className="eyebrow-dot" />{content.eyebrow}</div>
             <h1 id="hero-title">{content.name.split(' ')[0]}<br /><span className="hero-surname">{content.name.split(' ').slice(1).join(' ')}</span></h1>
             <p className="hero-role">{content.title}</p>
-            <p className="hero-tagline">{content.tagline}</p>
             <div className="hero-actions">
               <a className="button button-primary" href="#contacto">{content.ctaContact}</a>
               <a className="button button-text" href={pdfUrls[language]} download>
@@ -94,16 +93,14 @@ function App() {
             <div className="hero-quick-contact">
               <span className="email-plain">leonardocolasleyva@gmail.com</span>
               <span className="quick-separator" aria-hidden="true" />
-              <span className="phone-plain">+53 5 6083226</span>
+              <span className="phone-plain"><Phone size={14} aria-hidden="true" />+53 5 6083226</span>
             </div>
           </div>
           <div className="hero-visual">
-            <div className="hero-visual-caption"><span>FIG. 01</span><span>{content.availability}</span></div>
             <Suspense fallback={<div className="architecture-stage architecture-pending" aria-hidden="true"><span /></div>}>
               <ArchitectureScene labels={content.architectureLabels} language={language} />
             </Suspense>
           </div>
-          <a className="hero-scroll" href="#sobre-mi"><span className="scroll-line" />{content.scrollCue}</a>
         </section>
 
         <section className="split-section profile-section" id="sobre-mi">
@@ -135,7 +132,7 @@ function App() {
         </section>
 
         <section className="projects-section" id="proyectos">
-          <SectionAside index="03" title={content.projectsTitle} intro={content.projectsIntro} />
+          <SectionAside index="03" title={content.projectsTitle} />
           <div className="project-list">
             {content.projects.map((project, index) => (
               <article className="project-row" key={project.name}>
@@ -196,10 +193,10 @@ function App() {
         </section>
 
         <section className="contact-section" id="contacto">
-          <div className="contact-copy"><span className="eyebrow"><span className="eyebrow-dot" />{content.nav.about} / {language === 'es' ? 'CONTACTO' : 'CONTACT'}</span><h2>{content.contactTitle}</h2><p>{content.contactIntro}</p><p className="contact-email">leonardocolasleyva@gmail.com</p></div>
+          <div className="contact-copy"><span className="eyebrow"><span className="eyebrow-dot" />{language === 'es' ? 'CONTACTO' : 'CONTACT'}</span><h2>{content.contactTitle}</h2><p className="contact-email">leonardocolasleyva@gmail.com</p></div>
           <div className="contact-details">
             <ContactDetail label={content.emailLabel} value="leonardocolasleyva@gmail.com" />
-            <ContactDetail label={content.phoneLabel} value="+53 5 6083226" />
+            <ContactDetail icon={<Phone size={18} />} label={content.phoneLabel} value="+53 5 6083226" />
             <ContactDetail icon={<Github size={18} />} label={content.githubLabel} value="github.com/leonardocolas" href="https://github.com/leonardocolas" external />
             <ContactDetail icon={<MapPin size={18} />} label={content.locationLabel} value={content.location} />
           </div>
