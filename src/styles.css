@@ -282,7 +282,7 @@ main { overflow: clip; }
 .theme-toggle { width: 35px; height: 35px; display: inline-grid; place-items: center; flex: 0 0 auto; color: var(--ink); background: transparent; border: 1px solid #d5dbd3; border-radius: 2px; cursor: pointer; transition: color .18s, background .18s, border-color .18s; }
 .theme-toggle:hover { color: var(--green); background: #eaf0e9; border-color: #9fb9aa; }
 .theme-toggle:focus-visible, .language-toggle:focus-visible, .mobile-menu-toggle:focus-visible { outline-offset: 3px; }
-.hero-quick-contact .email-plain { max-width: 100%; color: #718079; font-size: 10px; overflow-wrap: anywhere; }
+.hero-quick-contact .email-plain, .hero-quick-contact .phone-plain { max-width: 100%; color: #718079; font-size: 10px; overflow-wrap: anywhere; }
 .contact-email { width: fit-content; max-width: 100%; margin: 27px 0 0 !important; color: #34765d !important; font-size: 13px !important; overflow-wrap: anywhere; }
 .contact-detail-text { min-width: 0; }
 .contact-detail-text > span, .contact-detail-text a { max-width: 100%; overflow-wrap: anywhere; }
@@ -309,7 +309,7 @@ html[data-theme="dark"] .wordmark-mark { color: #cce1d2; border-color: #779a85; 
 html[data-theme="dark"] .wordmark-mark span:last-of-type { color: #a3d3b5; }
 html[data-theme="dark"] .language-toggle, html[data-theme="dark"] .theme-toggle, html[data-theme="dark"] .mobile-menu-toggle { color: #dce7df; border-color: #43544a; }
 html[data-theme="dark"] .language-toggle:hover, html[data-theme="dark"] .theme-toggle:hover { color: #a9e0c2; background: #203129; border-color: #718e7b; }
-html[data-theme="dark"] .hero-tagline, html[data-theme="dark"] .hero-quick-contact .email-plain, html[data-theme="dark"] .hero-scroll, html[data-theme="dark"] .section-aside > p, html[data-theme="dark"] .section-index, html[data-theme="dark"] .profile-bottomline { color: #a1b0a6; }
+html[data-theme="dark"] .hero-tagline, html[data-theme="dark"] .hero-quick-contact .email-plain, html[data-theme="dark"] .hero-quick-contact .phone-plain, html[data-theme="dark"] .hero-scroll, html[data-theme="dark"] .section-aside > p, html[data-theme="dark"] .section-index, html[data-theme="dark"] .profile-bottomline { color: #a1b0a6; }
 html[data-theme="dark"] .eyebrow { color: #b3c2b8; }
 html[data-theme="dark"] .hero-surname { color: #9fc6a9; }
 html[data-theme="dark"] .button-primary { color: #142019; background: #8bcdae; border-color: #8bcdae; }

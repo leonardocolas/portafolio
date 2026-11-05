@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from 'react';
-import { Download, Github, Globe2, MapPin, Menu, Moon, Phone, Sun, X } from 'lucide-react';
+import { Download, Github, Globe2, MapPin, Menu, Moon, Sun, X } from 'lucide-react';
 import cv from './data/cv.json';
 const ArchitectureScene = lazy(() => import('./components/ArchitectureScene'));
 
@@ -94,7 +94,7 @@ function App() {
             <div className="hero-quick-contact">
               <span className="email-plain">leonardocolasleyva@gmail.com</span>
               <span className="quick-separator" aria-hidden="true" />
-              <a href="tel:+5356083226"><Phone size={14} />+53 5 6083226</a>
+              <span className="phone-plain">+53 5 6083226</span>
             </div>
           </div>
           <div className="hero-visual">
@@ -199,7 +199,7 @@ function App() {
           <div className="contact-copy"><span className="eyebrow"><span className="eyebrow-dot" />{content.nav.about} / {language === 'es' ? 'CONTACTO' : 'CONTACT'}</span><h2>{content.contactTitle}</h2><p>{content.contactIntro}</p><p className="contact-email">leonardocolasleyva@gmail.com</p></div>
           <div className="contact-details">
             <ContactDetail label={content.emailLabel} value="leonardocolasleyva@gmail.com" />
-            <ContactDetail icon={<Phone size={18} />} label={content.phoneLabel} value="+53 5 6083226" href="tel:+5356083226" />
+            <ContactDetail label={content.phoneLabel} value="+53 5 6083226" />
             <ContactDetail icon={<Github size={18} />} label={content.githubLabel} value="github.com/leonardocolas" href="https://github.com/leonardocolas" external />
             <ContactDetail icon={<MapPin size={18} />} label={content.locationLabel} value={content.location} />
           </div>
