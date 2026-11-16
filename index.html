@@ -4,15 +4,15 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="format-detection" content="email=no,telephone=no" />
-    <meta name="theme-color" content="#f5f5ef" />
+    <meta name="theme-color" content="#111a16" />
     <meta name="description" content="Portafolio profesional de Leonardo Colás Leyva, Ingeniero en Ciencias Informáticas y Desarrollador Full Stack en La Habana, Cuba." />
     <meta property="og:title" content="Leonardo Colás Leyva — Full Stack Developer" />
     <meta property="og:description" content="Ingeniería de software para productos con propósito." />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <title>Leonardo Colás Leyva — Full Stack Developer</title>
     <style>
-      html { color-scheme: light; }
-      html[data-theme="dark"] { color-scheme: dark; --loader-background: #111a16; --loader-foreground: #e5ede8; --loader-track: #38473f; --loader-accent: #9bd9bb; }
+      html { color-scheme: dark; --loader-background: #111a16; --loader-foreground: #e5ede8; --loader-track: #38473f; --loader-accent: #9bd9bb; }
+      html[data-theme="light"] { color-scheme: light; --loader-background: #f5f5ef; --loader-foreground: #203633; --loader-track: #d9e2dc; --loader-accent: #237764; }
       * { box-sizing: border-box; }
       body { margin: 0; }
       #root { min-height: 100vh; }
@@ -22,7 +22,8 @@
       @media (prefers-reduced-motion: reduce) { .loading-ring { animation: none; border-top-color: var(--loader-accent, #237764); } }
     </style>
     <script>
-      try { if (localStorage.getItem('portfolio-theme') === 'dark') document.documentElement.dataset.theme = 'dark'; } catch (_) {}
+      // Dark mode is the default; the theme is only light if the visitor chose it explicitly.
+      try { if (localStorage.getItem('portfolio-theme') === 'light') document.documentElement.dataset.theme = 'light'; else document.documentElement.dataset.theme = 'dark'; } catch (_) { document.documentElement.dataset.theme = 'dark'; }
     </script>
   </head>
   <body>

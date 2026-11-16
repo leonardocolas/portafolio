@@ -7,6 +7,9 @@ type Props = {
   language: 'es' | 'en';
 };
 
+const layerOptions: LayerKey[] = ['frontend', 'backend', 'database'];
+const AUTO_CYCLE_MS = 3400;
+
 const layerPositions: Record<LayerKey, THREE.Vector3> = {
   frontend: new THREE.Vector3(0, 1.18, 0.04),
   backend: new THREE.Vector3(-1.02, -0.47, 0.1),
@@ -19,12 +22,32 @@ export default function ArchitectureScene({ labels, language }: Props) {
   const selectionRef = useRef<LayerKey>('frontend');
   const [activeLayer, setActiveLayer] = useState<LayerKey>('frontend');
   const [webglAvailable, setWebglAvailable] = useState(true);
-  const layerOptions: LayerKey[] = ['frontend', 'backend', 'database'];
+  const [hovering, setHovering] = useState(false);
+  const [cycleKey, setCycleKey] = useState(0);
+  const [reducedMotion, setReducedMotion] = useState(() => window.matchMedia('(prefers-reduced-motion: reduce)').matches);
 
   useEffect(() => {
     selectionRef.current = activeLayer;
     renderOnceRef.current?.();
   }, [activeLayer]);
+
+  // Keep the accessibility preference in sync if it changes while the page is open.
+  useEffect(() => {
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const onChange = () => setReducedMotion(media.matches);
+    media.addEventListener('change', onChange);
+    return () => media.removeEventListener('change', onChange);
+  }, []);
+
+  // Automatic movement: the highlighted layer advances on its own, pausing on hover
+  // and restarting its timer after a manual pick.
+  useEffect(() => {
+    if (reducedMotion || hovering) return;
+    const id = window.setInterval(() => {
+      setActiveLayer((current) => layerOptions[(layerOptions.indexOf(current) + 1) % layerOptions.length]);
+    }, AUTO_CYCLE_MS);
+    return () => window.clearInterval(id);
+  }, [reducedMotion, hovering, cycleKey]);
 
   useEffect(() => {
     const canvas = canvasRef.current;
@@ -127,6 +150,14 @@ export default function ArchitectureScene({ labels, language }: Props) {
     let frame = 0;
     let elapsed = 0;
     let last = 0;
+    // The scene sways on its own; the user's drag is stored as an offset on top of it.
+    let dragX = 0;
+    let dragY = 0;
+    let swayX = 0;
+    let swayY = 0;
+    let dragging = false;
+    let previousX = 0;
+    let previousY = 0;
     const animate = (now: number) => {
       frame = requestAnimationFrame(animate);
       const delta = Math.min((now - last) / 1000, 0.05);
@@ -137,6 +168,10 @@ export default function ArchitectureScene({ labels, language }: Props) {
         halo.rotation.z = elapsed * 0.052;
         halo2.rotation.y = 0.16 + Math.sin(elapsed * 0.13) * 0.08;
         root.position.y = Math.sin(elapsed * 0.22) * 0.025;
+        swayY = Math.sin(elapsed * 0.17) * 0.24;
+        swayX = Math.sin(elapsed * 0.11) * 0.06;
+        root.rotation.y = dragY + swayY;
+        root.rotation.x = dragX + swayX;
         for (const [key, node] of nodes) {
           const selected = selectionRef.current === key;
           const mat = node.material as THREE.MeshBasicMaterial;
@@ -148,9 +183,6 @@ export default function ArchitectureScene({ labels, language }: Props) {
     };
     if (!media.matches) frame = requestAnimationFrame(animate);
 
-    let dragging = false;
-    let previousX = 0;
-    let previousY = 0;
     const onDown = (event: PointerEvent) => {
       dragging = true;
       previousX = event.clientX;
@@ -160,8 +192,10 @@ export default function ArchitectureScene({ labels, language }: Props) {
     };
     const onMove = (event: PointerEvent) => {
       if (!dragging) return;
-      root.rotation.y += (event.clientX - previousX) * 0.008;
-      root.rotation.x = THREE.MathUtils.clamp(root.rotation.x + (event.clientY - previousY) * 0.005, -0.5, 0.5);
+      dragY += (event.clientX - previousX) * 0.008;
+      dragX = THREE.MathUtils.clamp(dragX + (event.clientY - previousY) * 0.005, -0.5, 0.5);
+      root.rotation.y = dragY + (media.matches ? 0 : swayY);
+      root.rotation.x = dragX + (media.matches ? 0 : swayX);
       previousX = event.clientX;
       previousY = event.clientY;
       if (media.matches) draw();
@@ -173,6 +207,10 @@ export default function ArchitectureScene({ labels, language }: Props) {
         last = 0;
         frame = requestAnimationFrame(animate);
       } else {
+        swayX = 0;
+        swayY = 0;
+        root.rotation.y = dragY;
+        root.rotation.x = dragX;
         draw();
       }
     };
@@ -203,11 +241,11 @@ export default function ArchitectureScene({ labels, language }: Props) {
   }, []);
 
   return (
-    <div className="architecture-stage" role="group" aria-label={language === 'es' ? 'Diagrama tridimensional interactivo de capas de software' : 'Interactive three-dimensional software layer diagram'}>
+    <div className="architecture-stage" role="group" aria-label={language === 'es' ? 'Diagrama tridimensional interactivo de capas de software' : 'Interactive three-dimensional software layer diagram'} onMouseEnter={() => setHovering(true)} onMouseLeave={() => setHovering(false)}>
       {webglAvailable ? <canvas ref={canvasRef} className="architecture-canvas" aria-hidden="true" /> : <FallbackDiagram labels={labels} />}
       <div className="architecture-center-label" aria-hidden="true"><span>FULL</span><span>STACK</span></div>
       <div className="architecture-labels">
-        {layerOptions.map((key) => <button className={`architecture-node-label node-${key} ${activeLayer === key ? 'active' : ''}`} type="button" key={key} aria-pressed={activeLayer === key} onClick={() => setActiveLayer(key)}><span className="node-label-dot" />{labels[key]}</button>)}
+        {layerOptions.map((key) => <button className={`architecture-node-label node-${key} ${activeLayer === key ? 'active' : ''}`} type="button" key={key} aria-pressed={activeLayer === key} onClick={() => { setActiveLayer(key); setCycleKey((value) => value + 1); }}><span className="node-label-dot" />{labels[key]}</button>)}
       </div>
     </div>
   );

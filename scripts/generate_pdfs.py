@@ -19,8 +19,30 @@ ROOT = Path(__file__).resolve().parents[1]
 DATA = json.loads((ROOT / "src/data/cv.json").read_text(encoding="utf-8"))
 OUT = ROOT / "generated-pdfs"
 OUT.mkdir(parents=True, exist_ok=True)
-REGULAR = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans.ttf")
-BOLD = Path("/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf")
+
+
+def resolve_font(*names: str) -> Path:
+    """Find a Unicode-capable TTF on Linux, macOS or Windows (DejaVu preferred)."""
+    directories = [
+        Path("/usr/share/fonts/truetype/dejavu"),
+        Path("/usr/share/fonts/dejavu"),
+        Path("/usr/share/fonts/truetype"),
+        Path("/usr/share/fonts"),
+        Path("C:/Windows/Fonts"),
+        Path("/Library/Fonts"),
+        Path.home() / "Library/Fonts",
+    ]
+    for directory in directories:
+        for name in names:
+            candidate = directory / name
+            if candidate.exists():
+                return candidate
+    raise SystemExit(f"No se encontró ninguna fuente de entre: {', '.join(names)}")
+
+
+REGULAR = resolve_font("DejaVuSans.ttf", "arial.ttf", "segoeui.ttf", "Helvetica.ttc")
+BOLD = resolve_font("DejaVuSans-Bold.ttf", "arialbd.ttf", "segoeuib.ttf", "Helvetica.ttc")
+print(f"Usando fuentes: {REGULAR} · {BOLD}")
 pdfmetrics.registerFont(TTFont("Portfolio", str(REGULAR)))
 pdfmetrics.registerFont(TTFont("Portfolio-Bold", str(BOLD)))
 INK = colors.HexColor("#173b3b")
